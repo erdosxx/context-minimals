@@ -59,5 +59,6 @@ stdenv.mkDerivation (attrsFinal: {
     let
       source = builtins.readFile (attrsFinal.src + "/texk/web2c/luatexdir/luatex.c");
       versionMatch = builtins.match ''.*[^a-z0-9_]luatex_version_string[ \t]*=[ \t]*"([^"]*)";.*'' source;
-    in builtins.elemAt versionMatch 0;
+    in
+    builtins.elemAt versionMatch 0;
 })

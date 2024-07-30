@@ -27,5 +27,6 @@ stdenv.mkDerivation (attrsFinal: {
     let
       source = builtins.readFile (attrsFinal.src + "/source/luametatex.h");
       versionMatch = builtins.match ''.*[^a-z0-9_]luametatex_version_string[ \t]+"([^"]*)".*'' source;
-    in builtins.elemAt versionMatch 0;
+    in
+    builtins.elemAt versionMatch 0;
 })
