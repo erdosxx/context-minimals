@@ -6,7 +6,7 @@
 , luametatex
 , luatex
 , makeWrapper
-, poppler_utils
+, poppler-utils
 , fonts ? [ ]
 , fpath ? [ ]
 , fcache ? [ ]
@@ -19,7 +19,7 @@ let
     in
     {
       pname = "context-minimals-base";
-      version = "2024.06.21 18:42";
+      version = "2026.09.10 09:53";
 
       passthru.srcs' = { inherit context context-fonts context-modules; };
       srcs = builtins.attrValues srcs';
@@ -170,7 +170,7 @@ stdenv.mkDerivation (attrsFinal: {
   '';
 
   doCheck = true;
-  nativeCheckInputs = [ poppler_utils ];
+  nativeCheckInputs = [ poppler-utils ];
 
   checkPhase = ''
     runHook preCheck

@@ -3,11 +3,11 @@
     "context": {
       "flake": false,
       "locked": {
-        "lastModified": 1718988633,
-        "narHash": "sha256-cGv/0RfPEAS3Bk1tH+JOxs1vsNXyv2n2JsDexjZ+nBY=",
+        "lastModified": 1789029318,
+        "narHash": "sha256-1JzvOEFRrfOONgja4afLQsONcE0qAlKEPKoCsrvOqBU=",
         "owner": "contextgarden",
         "repo": "context",
-        "rev": "1b2969ec0070260690fc2d1e27ee37435ed49ce0",
+        "rev": "3b889cc54202bd8d0bceab31ce84809ceb18b644",
         "type": "github"
       },
       "original": {
@@ -19,11 +19,11 @@
     "context-fonts": {
       "flake": false,
       "locked": {
-        "lastModified": 1716973405,
-        "narHash": "sha256-zHgujSRgLk28/Y5VQrrl/nzlBKsqgY2l8aWj9hoCuVQ=",
+        "lastModified": 1789327306,
+        "narHash": "sha256-FGzorZK0Rksn/0+UFQKdmE58DhwSXRF/M7gU24oz34U=",
         "owner": "contextgarden",
         "repo": "context-distribution-fonts",
-        "rev": "7140d76057cdd6d82963dd20c400299c9c1873e3",
+        "rev": "d53e81148228456afdca9d264f3f09d9c53366bd",
         "type": "github"
       },
       "original": {
@@ -52,27 +52,26 @@
     "luatex": {
       "flake": false,
       "locked": {
-        "lastModified": 1677857213,
-        "narHash": "sha256-70KPEGv2oVkhGlCWThtmRdasKA1E4ZZe/vTt4wHoukk=",
-        "owner": "TeX-Live",
-        "repo": "luatex",
-        "rev": "f52b099f3e01d53dc03b315e1909245c3d5418d3",
-        "type": "github"
+        "lastModified": 1789065234,
+        "narHash": "sha256-FuFmrqmGz7/Ptx5w1LlYyXPpw20pSgcfdE2yFxsmgDc=",
+        "ref": "refs/heads/master",
+        "rev": "728109f4cb36e7a91ce58b3afbb3bd007c0a9b45",
+        "revCount": 6677,
+        "type": "git",
+        "url": "https://gitlab.lisn.upsaclay.fr/texlive/luatex.git"
       },
       "original": {
-        "owner": "TeX-Live",
-        "repo": "luatex",
-        "type": "github"
+        "type": "git",
+        "url": "https://gitlab.lisn.upsaclay.fr/texlive/luatex.git"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1719826879,
-        "narHash": "sha256-xs7PlULe8O1SAcs/9e/HOjeUjBrU5FNtkAF/bSEcFto=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "b9014df496d5b68bf7c0145d0e9b0f529ce4f2a8",
-        "type": "github"
+        "lastModified": 1789370336,
+        "narHash": "sha256-obwZbWHP7htCIoq2Z0g/uTMcEgN6yqcMNIcOMe6P2qI=",
+        "rev": "c7def046b9a883d46974757852106483d741586f",
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1073483.c7def046b9a8/nixexprs.tar.zst"
       },
       "original": {
         "id": "nixpkgs",

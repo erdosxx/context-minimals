@@ -17,7 +17,7 @@
 
     luatex = {
       flake = false;
-      url = "github:TeX-Live/luatex";
+      url = "git+https://gitlab.lisn.upsaclay.fr/texlive/luatex.git";
     };
 
     nixpkgs.url = "flake:nixpkgs/nixpkgs-unstable";

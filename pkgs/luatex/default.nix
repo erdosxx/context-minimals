@@ -10,7 +10,7 @@
 
 stdenv.mkDerivation (attrsFinal: {
   pname = "luatex";
-  version = "1.16.0";
+  version = "1.27.1";
 
   src = src + /source;
 
