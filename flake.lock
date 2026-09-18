@@ -19,11 +19,11 @@
     "context-fonts": {
       "flake": false,
       "locked": {
-        "lastModified": 1789327306,
-        "narHash": "sha256-FGzorZK0Rksn/0+UFQKdmE58DhwSXRF/M7gU24oz34U=",
+        "lastModified": 1789692054,
+        "narHash": "sha256-L3MAEUZQPFf0psnN7LKjxGcyCAA6+751nJxHg1blbQA=",
         "owner": "contextgarden",
         "repo": "context-distribution-fonts",
-        "rev": "d53e81148228456afdca9d264f3f09d9c53366bd",
+        "rev": "760c0e05c74e5e25667e4f04cfd5e49c1b93efbe",
         "type": "github"
       },
       "original": {
@@ -67,11 +67,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1789370336,
-        "narHash": "sha256-obwZbWHP7htCIoq2Z0g/uTMcEgN6yqcMNIcOMe6P2qI=",
-        "rev": "c7def046b9a883d46974757852106483d741586f",
+        "lastModified": 1789632929,
+        "narHash": "sha256-j08lBbqaYwjsW0xy6Dh4MNZpQ/oSvLU1MLAo38OXphM=",
+        "rev": "a32edd7654519351e48e80372a928df336394670",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1073483.c7def046b9a8/nixexprs.tar.zst"
+        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1075288.a32edd765451/nixexprs.tar.zst"
       },
       "original": {
         "id": "nixpkgs",
