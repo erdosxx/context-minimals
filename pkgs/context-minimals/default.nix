@@ -19,7 +19,7 @@ let
     in
     {
       pname = "context-minimals-base";
-      version = "2026.09.10 09:53";
+      version = "2026.10.31 00:48";
 
       passthru.srcs' = { inherit context context-fonts context-modules; };
       srcs = builtins.attrValues srcs';
