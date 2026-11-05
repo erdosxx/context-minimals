@@ -17,6 +17,13 @@ stdenv.mkDerivation (attrsFinal: {
 
   enableParallelBuilding = true;
 
+  # mtxrun.lua still requires `socket.core`; upstream disabled the bundled
+  # luasocket by default ("only when we transition"), so re-enable it.
+  postPatch = ''
+    substituteInPlace CMakeLists.txt \
+      --replace-fail 'set(LMT_SOCKET_TOO 0)' 'set(LMT_SOCKET_TOO 1)'
+  '';
+
   CFLAGS = "-Wno-builtin-macro-redefined -U__DATE__";
 
   installPhase = ''
