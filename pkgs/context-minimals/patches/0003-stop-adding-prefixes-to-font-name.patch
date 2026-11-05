@@ -1,4 +1,4 @@
-From 91acb92601bafa604139f99e27de17ab26616385 Mon Sep 17 00:00:00 2001
+From a9f4aa4dd728d4ab38523109ef827e817847a69c Mon Sep 17 00:00:00 2001
 From: usertam <heiyiutam@gmail.com>
 Date: Thu, 22 Dec 2022 01:07:39 +0800
 Subject: [PATCH 3/4] stop adding prefixes to font name
@@ -8,10 +8,10 @@ Subject: [PATCH 3/4] stop adding prefixes to font name
  1 file changed, 1 insertion(+), 9 deletions(-)
 
 diff --git a/tex/context/base/mkxl/lpdf-emb.lmt b/tex/context/base/mkxl/lpdf-emb.lmt
-index a0ad154e..ac3e4624 100644
+index a50ce72..dcaf1d1 100644
 --- a/tex/context/base/mkxl/lpdf-emb.lmt
 +++ b/tex/context/base/mkxl/lpdf-emb.lmt
-@@ -454,15 +454,7 @@ end
+@@ -462,15 +462,7 @@ end
      local prefixes = { } -- todo: set fixed one
  
      subsetname = function(name)
@@ -29,5 +29,5 @@ index a0ad154e..ac3e4624 100644
  
  end
 -- 
-2.49.0
+2.56.0
 

@@ -1,4 +1,4 @@
-From b73b9578be26eeca37a19b8ae6d65b2a5152c5b8 Mon Sep 17 00:00:00 2001
+From 5dc73d379a16472339d4a40c1f0a24279b800a84 Mon Sep 17 00:00:00 2001
 From: usertam <heiyiutam@gmail.com>
 Date: Fri, 30 Dec 2022 01:59:42 +0800
 Subject: [PATCH 4/4] remove placeholder text for uuid
@@ -9,7 +9,7 @@ Subject: [PATCH 4/4] remove placeholder text for uuid
  2 files changed, 4 insertions(+), 19 deletions(-)
 
 diff --git a/tex/context/base/mkiv/lpdf-xmp.lua b/tex/context/base/mkiv/lpdf-xmp.lua
-index b1a39782..0ae0c696 100644
+index 3833ae9..c8762ad 100644
 --- a/tex/context/base/mkiv/lpdf-xmp.lua
 +++ b/tex/context/base/mkiv/lpdf-xmp.lua
 @@ -276,18 +276,11 @@ local function flushxmpinfo()
@@ -43,36 +43,37 @@ index b1a39782..0ae0c696 100644
          pdfaddxmpinfo("CreatorTool",creator)
          pdfaddxmpinfo("CreateDate",time)
 diff --git a/tex/context/base/mkxl/lpdf-xmp.lmt b/tex/context/base/mkxl/lpdf-xmp.lmt
-index 926db0d3..cf70ed79 100644
+index bb957ce..5ae6586 100644
 --- a/tex/context/base/mkxl/lpdf-xmp.lmt
 +++ b/tex/context/base/mkxl/lpdf-xmp.lmt
-@@ -126,16 +126,12 @@ local function pdfgetmetadata()
-         local luatexversion       = LUATEXVERBOSE
-         local luatexfunctionality = tostring(LUATEXFUNCTIONALITY)
-         local jobname             = environment.jobname or tex.jobname or "unknown"
--        local documentid          = trailerid and ("uuid:" .. osuuid()) or "no unique document id here"
--        local instanceid          = trailerid and ("uuid:" .. osuuid()) or "no unique instance id here"
-         local producer            = "LuaMetaTeX"
-         local creator             = format("LuaMetaTeX %s %s + ConTeXt LMTX %s",luatexversion,luatexfunctionality,contextversion)
-         metadata = creationdate and {
-             producer            = producer,
-             creator             = creator,
-             id                  = format("%s | %s",jobname,creationdate),
--            documentid          = documentid,
--            instanceid          = instanceid,
-             jobname             = jobname,
+@@ -130,8 +130,6 @@ local function pdfgetmetadata()
+         local luametatexfunctionality = tostring(environment.luametatexfunctionality )
+         local luaversion              = tostring(environment.luaversion)
+         local jobname    = environment.jobname or tex.jobname or "unknown"
+-        local documentid = trailerid and ("uuid:" .. osuuid()) or "no unique document id here"
+-        local instanceid = trailerid and ("uuid:" .. osuuid()) or "no unique instance id here"
+         local producer   = "LuaMetaTeX"
+         local creator    = formatted("LuaMetaTeX %s %s + ConTeXt LMTX %s",
+             luametatexversion,
+@@ -142,8 +140,6 @@ local function pdfgetmetadata()
+             producer   = producer,
+             creator    = creator,
+             id         = formatted("%s | %s",jobname,creationdate),
+-            documentid = documentid,
+-            instanceid = instanceid,
+             jobname    = jobname,
              --
-             luatexversion       = luatexversion,
-@@ -149,8 +145,6 @@ local function pdfgetmetadata()
-             producer            = producer,
-             creator             = creator,
-             id                  = jobname,
--            documentid          = documentid,
--            instanceid          = instanceid,
-             jobname             = jobname,
+             luatexversion           = luametatexversion,
+@@ -158,8 +154,6 @@ local function pdfgetmetadata()
+             producer   = producer,
+             creator    = creator,
+             id         = jobname,
+-            documentid = documentid,
+-            instanceid = instanceid,
+             jobname    = jobname,
          }
       -- inspect(metadata)
-@@ -410,8 +404,6 @@ local function flushxmpinfo()
+@@ -448,8 +442,6 @@ local function flushxmpinfo()
      local modification = metadata.time or metadata.modificationdate or modificationdate or creation
      local producer     = metadata.producer
      local creator      = metadata.creator
@@ -81,9 +82,9 @@ index 926db0d3..cf70ed79 100644
  
      pdfaddtoinfo("Producer",producer)
      pdfaddtoinfo("Creator",creator)
-@@ -420,8 +412,8 @@ local function flushxmpinfo()
+@@ -460,8 +452,8 @@ local function flushxmpinfo()
  
-     if add_xmp_blob then
+         if not xmp then xmp = valid_xmp() end
  
 -        pdfaddxmpinfo("DocumentID",documentid)
 -        pdfaddxmpinfo("InstanceID",instanceid)
@@ -93,5 +94,5 @@ index 926db0d3..cf70ed79 100644
          pdfaddxmpinfo("CreatorTool",creator)
          pdfaddxmpinfo("CreateDate",creation)
 -- 
-2.49.0
+2.56.0
 
