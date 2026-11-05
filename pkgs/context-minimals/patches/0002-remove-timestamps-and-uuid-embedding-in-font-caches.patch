@@ -1,4 +1,4 @@
-From e6daf4dc2ad88ede71d92200f441956650baf0a4 Mon Sep 17 00:00:00 2001
+From 394ad2086d7cc11d121805692d4fac140b3cf70b Mon Sep 17 00:00:00 2001
 From: usertam <heiyiutam@gmail.com>
 Date: Wed, 21 Dec 2022 16:48:39 +0800
 Subject: [PATCH 2/4] remove timestamps and uuid embedding in font caches
@@ -11,7 +11,9 @@ Improves font caches reproducibility.
  tex/context/base/mkiv/data-tmp.lua | 16 ----------------
  tex/context/base/mkiv/font-cft.lua |  1 -
  tex/context/base/mkiv/font-syn.lua | 12 +-----------
- 6 files changed, 1 insertion(+), 51 deletions(-)
+ tex/context/base/mkxl/data-tmp.lmt | 15 ---------------
+ tex/context/base/mkxl/font-syn.lmt | 12 +-----------
+ 8 files changed, 2 insertions(+), 77 deletions(-)
 
 diff --git a/scripts/context/lua/mtx-fonts.lua b/scripts/context/lua/mtx-fonts.lua
 index f5cf4b7..409f21b 100644
@@ -187,6 +189,83 @@ index 2fb4bf9..ecfa711 100644
  end
  
 @@ -1383,16 +1382,7 @@ local function is_reloaded()
+     if not reloaded then
+         local data = names.data
+         if autoreload then
+-            local c_status = serialize(resolvers.datastate())
+-            local f_status = serialize(data.datastate)
+-            if c_status == f_status then
+-                if trace_names then
+-                    report_names("font database has matching configuration and file hashes")
+-                end
+-                return
+-            else
+-                report_names("font database has mismatching configuration and file hashes")
+-            end
++            return
+         else
+             report_names("font database is regenerated (controlled by directive 'fonts.autoreload')")
+         end
+diff --git a/tex/context/base/mkxl/data-tmp.lmt b/tex/context/base/mkxl/data-tmp.lmt
+index 763cc6c..86fe72a 100644
+--- a/tex/context/base/mkxl/data-tmp.lmt
++++ b/tex/context/base/mkxl/data-tmp.lmt
+@@ -378,19 +378,12 @@ end
+ 
+ function caches.savedata(filepath,filename,data,fast)
+     local tmaname, tmcname = setluanames(filepath,filename)
+-    data.cache_uuid = osuuid()
+     savedata(tmaname,serialize(data,true))
+     compilelua(tmaname,tmcname)
+ end
+ 
+ -- moved from data-res:
+ 
+-local content_state = { }
+-
+-function caches.contentstate()
+-    return content_state or { }
+-end
+-
+ function caches.loadcontent(cachename,dataname,filename)
+     if not filename then
+         local name = hashed(cachename)
+@@ -412,11 +405,6 @@ function caches.loadcontent(cachename,dataname,filename)
+         if data and data.content then
+             if data.type == dataname then
+                 if data.version == resolvers.cacheversion then
+-                    local uuid = data.uuid
+-                    content_state[#content_state+1] = uuid
+-                    if trace_cache then
+-                        report_caches("registering content uuid %a for %a",uuid,filename)
+-                    end
+                     if trace_locating then
+                         report_resolvers("loading %a for %a from %a",dataname,cachename,filename)
+                     end
+@@ -459,10 +447,7 @@ function caches.savecontent(cachename,dataname,content,filename)
+         type    = dataname,
+         root    = cachename,
+         version = resolvers.cacheversion,
+-        date    = osdate("%Y-%m-%d"),
+-        time    = osdate("%H:%M:%S"),
+         content = content,
+-        uuid    = uuid,
+     }
+     local ok = savedata(luaname,serialize(data,true))
+     if trace_cache then
+diff --git a/tex/context/base/mkxl/font-syn.lmt b/tex/context/base/mkxl/font-syn.lmt
+index 90541df..d4a31eb 100644
+--- a/tex/context/base/mkxl/font-syn.lmt
++++ b/tex/context/base/mkxl/font-syn.lmt
+@@ -1167,7 +1167,6 @@ local function resetdata()
+         names          = { },
+         indices        = { },
+         rejected       = { },
+-        datastate      = resolvers.datastate(),
+     }
+ end
+ 
+@@ -1285,16 +1284,7 @@ local function is_reloaded()
      if not reloaded then
          local data = names.data
          if autoreload then

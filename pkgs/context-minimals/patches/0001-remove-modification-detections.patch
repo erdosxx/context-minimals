@@ -1,4 +1,4 @@
-From 7e7d33ff8667708f5ef7d3cc403873a2f9955c91 Mon Sep 17 00:00:00 2001
+From 56ed4c83fb863a33a5a0ab26a3be3bec9963453e Mon Sep 17 00:00:00 2001
 From: usertam <heiyiutam@gmail.com>
 Date: Wed, 21 Dec 2022 16:40:04 +0800
 Subject: [PATCH 1/4] remove modification detections
@@ -21,9 +21,12 @@ rebuilding of font caches, remove the detection routines altogether.
  tex/context/base/mkiv/meta-fnt.lua            |  4 +-
  tex/context/base/mkxl/font-one.lmt            |  7 +--
  tex/context/base/mkxl/font-otl.lmt            | 14 +----
+ tex/context/base/mkxl/font-syn.lmt            | 25 +++-----
  tex/context/base/mkxl/grph-inc.lmt            | 15 +----
+ tex/context/base/mkxl/l-file.lmt              |  4 --
+ tex/context/base/mkxl/l-md5.lmt               | 25 +-------
  .../context/luatex/luatex-fonts-merged.lua    | 60 ++++---------------
- 15 files changed, 44 insertions(+), 206 deletions(-)
+ 18 files changed, 55 insertions(+), 249 deletions(-)
 
 diff --git a/scripts/context/lua/mtxrun.lua b/scripts/context/lua/mtxrun.lua
 index d92dda5..1326d4f 100644
@@ -678,6 +681,86 @@ index d8d8ae3..709c4f3 100644
              end
              specification.filename = cachename
          end
+diff --git a/tex/context/base/mkxl/font-syn.lmt b/tex/context/base/mkxl/font-syn.lmt
+index c8b1c68..90541df 100644
+--- a/tex/context/base/mkxl/font-syn.lmt
++++ b/tex/context/base/mkxl/font-syn.lmt
+@@ -28,7 +28,7 @@ local serialize, sortedhash = table.serialize, table.sortedhash
+ local unpack = unpack or table.unpack
+ local P, R, S, C, Cc, Ct, Cs = lpeg.P, lpeg.R, lpeg.S, lpeg.C, lpeg.Cc, lpeg.Ct, lpeg.Cs
+ local lpegmatch, lpegpatterns = lpeg.match, lpeg.patterns
+-local isfile, modificationtime = lfs.isfile, lfs.modification
++local isfile = lfs.isfile
+ 
+ local onlyascii            = string.onlyascii
+ local upper                = string.toupper
+@@ -478,7 +478,7 @@ end
+ names.cleanname     = cleanname
+ names.cleanfilename = cleanfilename
+ 
+-local function check_name(data,result,filename,modification,suffix,subfont)
++local function check_name(data,result,filename,suffix,subfont)
+     -- shortcuts
+     local specifications = data.specifications
+     -- fetch
+@@ -565,7 +565,6 @@ local function check_name(data,result,filename,modification,suffix,subfont)
+         minsize        = minsize      ~=    0 and minsize      or nil,
+         maxsize        = maxsize      ~=    0 and maxsize      or nil,
+         designsize     = designsize   ~=    0 and designsize   or nil,
+-        modification   = modification ~=    0 and modification or nil,
+         instancenames  = instancenames or nil,
+     }
+ end
+@@ -994,23 +993,17 @@ local function analyzefiles(olddata)
+             end
+             -- needs checking with ttc / ttx : date not updated ?
+             local result = nil
+-            local modification = modificationtime(completename)
+-            if olddata and modification and modification > 0 then
++            if olddata then
+                 local oldindex = oldindices[storedname] -- index into specifications
+                 if oldindex then
+                     local oldspecification = oldspecifications[oldindex]
+                     if oldspecification and oldspecification.filename == storedname then -- double check for out of sync
+-                        local oldmodification = oldspecification.modification
+-                        if oldmodification == modification then
+-                            result = oldspecification
+-                            specifications[#specifications + 1] = result
+-                        else
+-                            -- ??
+-                        end
++                        result = oldspecification
++                        specifications[#specifications + 1] = result
+                     else
+                          -- ??
+                     end
+-                elseif oldrejected[storedname] == modification then
++                else
+                     result = false
+                 end
+             end
+@@ -1020,10 +1013,10 @@ local function analyzefiles(olddata)
+                 if result then
+                     if #result > 0 then
+                         for r=1,#result do
+-                            check_name(data,result[r],storedname,modification,suffix,r) -- subfonts start at zero
++                            check_name(data,result[r],storedname,suffix,r) -- subfonts start at zero
+                         end
+                     else
+-                        check_name(data,result,storedname,modification,suffix)
++                        check_name(data,result,storedname,suffix)
+                     end
+                     if trace_warnings and message and message ~= "" then
+                         report_names("warning when identifying %s font %a, %s",suffix,completename,message)
+@@ -1138,7 +1131,7 @@ local function rejectclashes() -- just to be sure, so no explicit afm will be fo
+                 if trace_warnings then
+                     report_names("fontname %a clashes, %a rejected in favor of %a",f,fnm,fnd)
+                 end
+-                rejected[f] = s.modification
++                rejected[f] = nil
+             else
+                 used[f] = fnm
+                 o = o + 1
 diff --git a/tex/context/base/mkxl/grph-inc.lmt b/tex/context/base/mkxl/grph-inc.lmt
 index 03df4b9..0e8fd72 100644
 --- a/tex/context/base/mkxl/grph-inc.lmt
@@ -711,6 +794,62 @@ index 03df4b9..0e8fd72 100644
                  end
                  if io.exists(newname) and io.size(newname) > 0 then
                      specification.foundname = oldname
+diff --git a/tex/context/base/mkxl/l-file.lmt b/tex/context/base/mkxl/l-file.lmt
+index 9b01578..10aa2d9 100644
+--- a/tex/context/base/mkxl/l-file.lmt
++++ b/tex/context/base/mkxl/l-file.lmt
+@@ -44,10 +44,6 @@ function lfs.isfound(name)
+     end
+ end
+ 
+-function lfs.modification(name)
+-    return name and attributes(name,"modification") or nil
+-end
+-
+ local colon     = P(":")
+ local period    = P(".")
+ local periods   = P("..")
+diff --git a/tex/context/base/mkxl/l-md5.lmt b/tex/context/base/mkxl/l-md5.lmt
+index c389973..ea60392 100644
+--- a/tex/context/base/mkxl/l-md5.lmt
++++ b/tex/context/base/mkxl/l-md5.lmt
+@@ -7,34 +7,13 @@ if not modules then modules = { } end modules ['l-md5'] = {
+ 
+ local file = file
+ local gsub = string.gsub
+-local modification, isfile, touch = lfs.modification, lfs.isfile, lfs.touch
++local isfile, touch = lfs.isfile, lfs.touch
+ local loaddata, savedata = io.loaddata, io.savedata
+ 
+ local md5HEX = md5.HEX
+ 
+ function file.needsupdating(oldname,newname,threshold) -- size modification access change
+-    local oldtime = modification(oldname)
+-    if oldtime then
+-        local newtime = modification(newname)
+-        if not newtime then
+-            return true  -- no new file, so no updating needed
+-        elseif newtime >= oldtime then
+-            return false -- new file definitely needs updating
+-        elseif oldtime - newtime < (threshold or 1) then
+-            return false -- new file is probably still okay
+-        else
+-            return true  -- new file has to be updated
+-        end
+-    else
+-        return false     -- no old file, so no updating needed
+-    end
+-end
+-
+-function file.syncmtimes(oldname,newname)
+-    local oldtime = modification(oldname)
+-    if oldtime and isfile(newname) then
+-        touch(newname,oldtime,oldtime)
+-    end
++    return false
+ end
+ 
+ local function checksum(name)
 diff --git a/tex/generic/context/luatex/luatex-fonts-merged.lua b/tex/generic/context/luatex/luatex-fonts-merged.lua
 index 3520ae8..bbd47d9 100644
 --- a/tex/generic/context/luatex/luatex-fonts-merged.lua
