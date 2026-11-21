@@ -19,11 +19,11 @@
     "context-fonts": {
       "flake": false,
       "locked": {
-        "lastModified": 1789692054,
-        "narHash": "sha256-L3MAEUZQPFf0psnN7LKjxGcyCAA6+751nJxHg1blbQA=",
+        "lastModified": 1792394507,
+        "narHash": "sha256-R3BQVBEBBym+Fjj1hQIIB2OeMW4+YM95qEySY+9m8YA=",
         "owner": "contextgarden",
         "repo": "context-distribution-fonts",
-        "rev": "760c0e05c74e5e25667e4f04cfd5e49c1b93efbe",
+        "rev": "3b96e7c03fd4d68e5339e580ab87bdd9721c24f2",
         "type": "github"
       },
       "original": {
@@ -52,11 +52,11 @@
     "luatex": {
       "flake": false,
       "locked": {
-        "lastModified": 1789065234,
-        "narHash": "sha256-FuFmrqmGz7/Ptx5w1LlYyXPpw20pSgcfdE2yFxsmgDc=",
+        "lastModified": 1794587986,
+        "narHash": "sha256-eIPzN6Mga9STgt+zX4oWLjoeVxKFKKVd6k/9JiZOiYU=",
         "ref": "refs/heads/master",
-        "rev": "728109f4cb36e7a91ce58b3afbb3bd007c0a9b45",
-        "revCount": 6677,
+        "rev": "f201df844fd74d4d55b2014a22a20df0aba9d88a",
+        "revCount": 6701,
         "type": "git",
         "url": "https://gitlab.lisn.upsaclay.fr/texlive/luatex.git"
       },
@@ -67,11 +67,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1789632929,
-        "narHash": "sha256-j08lBbqaYwjsW0xy6Dh4MNZpQ/oSvLU1MLAo38OXphM=",
-        "rev": "a32edd7654519351e48e80372a928df336394670",
+        "lastModified": 1795187554,
+        "narHash": "sha256-HgLXdkBA+2GBBOI/9989wbvWWkkqS88yEguMpFKAbDI=",
+        "rev": "9996594bd38077de6a018ec17453ba3d99182787",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1075288.a32edd765451/nixexprs.tar.zst"
+        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1125400.9996594bd380/nixexprs.tar.zst"
       },
       "original": {
         "id": "nixpkgs",
@@ -92,11 +92,11 @@
     "systems": {
       "flake": false,
       "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "lastModified": 1791244623,
+        "narHash": "sha256-uuanbkFk8a313Zfrxdcz8Us/yQtaxNnKJtX8v0ZPpd8=",
         "owner": "nix-systems",
         "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "rev": "d36eeed142f88b5a636f2e3856a53c61654cf29b",
         "type": "github"
       },
       "original": {
