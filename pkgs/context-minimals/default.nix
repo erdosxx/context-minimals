@@ -50,6 +50,10 @@ let
 
         # populate `tex/texmf-context/bin`
         ln -st $out/share/tex/texmf-context/bin ../scripts/context/lua/{context.lua,mtxrun.lua,mtx-context.{lua,xml}}
+        # LuaMetaTeX started as `context`/`mtxrun` loads <name>.lmt before <name>.lua;
+        # without the .lmt stubs it runs the MkIV (LuaTeX) mtxrun, which cannot read
+        # the LuaMetaTeX functionality level and remakes the format on every run.
+        ln -st $out/share/tex/texmf-context/bin ../scripts/context/lua/{context.lmt,mtxrun.lmt}
         ln -s luametatex $out/share/tex/texmf-context/bin/mtxrun
         ln -s luametatex $out/share/tex/texmf-context/bin/context
 
