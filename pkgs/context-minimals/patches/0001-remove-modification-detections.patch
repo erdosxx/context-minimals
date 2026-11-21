@@ -7,26 +7,28 @@ In a pure environment, caches are always reproducible and correct.
 Hence, outdated caches are perfectly fine, rendering timestamp-based
 detections and cache regeneration redundant. To avoid constant
 rebuilding of font caches, remove the detection routines altogether.
+Note: the OpenType head-table timestamps are still read (and discarded),
+since the fields after them depend on the read position.
 ---
- scripts/context/lua/mtxrun.lua                | 29 +--------
- tex/context/base/mkiv/data-sch.lua            |  2 +-
- tex/context/base/mkiv/font-one.lua            |  7 +--
- tex/context/base/mkiv/font-otl.lua            | 14 +----
- tex/context/base/mkiv/font-otr.lua            | 13 ----
- tex/context/base/mkiv/font-shp.lua            | 16 ++---
- tex/context/base/mkiv/font-syn.lua            | 25 +++-----
- tex/context/base/mkiv/grph-inc.lua            | 15 +----
- tex/context/base/mkiv/l-file.lua              |  4 --
- tex/context/base/mkiv/l-md5.lua               | 25 +-------
- tex/context/base/mkiv/meta-fnt.lua            |  4 +-
- tex/context/base/mkxl/font-one.lmt            |  7 +--
- tex/context/base/mkxl/font-otl.lmt            | 14 +----
- tex/context/base/mkxl/font-syn.lmt            | 25 +++-----
- tex/context/base/mkxl/grph-inc.lmt            | 15 +----
- tex/context/base/mkxl/l-file.lmt              |  4 --
- tex/context/base/mkxl/l-md5.lmt               | 25 +-------
- .../context/luatex/luatex-fonts-merged.lua    | 60 ++++---------------
- 18 files changed, 55 insertions(+), 249 deletions(-)
+ scripts/context/lua/mtxrun.lua                    | 29 ++--------
+ tex/context/base/mkiv/data-sch.lua                |  2 +-
+ tex/context/base/mkiv/font-one.lua                |  7 +--
+ tex/context/base/mkiv/font-otl.lua                | 14 ++---
+ tex/context/base/mkiv/font-otr.lua                | 19 +++----
+ tex/context/base/mkiv/font-shp.lua                | 16 ++----
+ tex/context/base/mkiv/font-syn.lua                | 25 ++++-----
+ tex/context/base/mkiv/grph-inc.lua                | 15 ++----
+ tex/context/base/mkiv/l-file.lua                  |  4 --
+ tex/context/base/mkiv/l-md5.lua                   | 25 +--------
+ tex/context/base/mkiv/meta-fnt.lua                |  4 +-
+ tex/context/base/mkxl/font-one.lmt                |  7 +--
+ tex/context/base/mkxl/font-otl.lmt                | 14 ++---
+ tex/context/base/mkxl/font-syn.lmt                | 25 ++++-----
+ tex/context/base/mkxl/grph-inc.lmt                | 15 ++----
+ tex/context/base/mkxl/l-file.lmt                  |  4 --
+ tex/context/base/mkxl/l-md5.lmt                   | 25 +--------
+ .../context/luatex/luatex-fonts-merged.lua        | 60 ++++-----------------
+ 18 files changed, 63 insertions(+), 247 deletions(-)
 
 diff --git a/scripts/context/lua/mtxrun.lua b/scripts/context/lua/mtxrun.lua
 index d92dda5..1326d4f 100644
@@ -212,31 +214,38 @@ index 3531959..814fffc 100644
              specification.filename = cachename
          end
 diff --git a/tex/context/base/mkiv/font-otr.lua b/tex/context/base/mkiv/font-otr.lua
-index c2b6898..3aad882 100644
+index c2b6898..6bb9c05 100644
 --- a/tex/context/base/mkiv/font-otr.lua
 +++ b/tex/context/base/mkiv/font-otr.lua
-@@ -165,11 +165,6 @@ end)
+@@ -164,10 +164,13 @@ end)
+ 
  -- date represented in number of seconds since 12:00 midnight, January 1, 1904. The value is represented as a
  -- signed 64-bit integer
++--
++-- The created/modified timestamps are skipped (not stored) to keep the font caches reproducible; they must
++-- still be read, otherwise the remaining fields of the head table (bounding box, indexToLocFormat) are taken
++-- from the wrong offsets and TrueType glyph data can no longer be located.
  
 -local function readlongdatetime(f)
 -    local a, b, c, d, e, f, g, h = readbytes(f,8)
 -    return 0x100000000 * d + 0x1000000 * e + 0x10000 * f + 0x100 * g + h
--end
--
++local function skiplongdatetime(f)
++    readbytes(f,8)
+ end
+ 
  local tableversion    = 0.004
- readers.tableversion  = tableversion
- local privateoffset   = fonts.constructors and fonts.constructors.privateoffset or 0xF0000 -- 0x10FFFF
-@@ -1063,8 +1058,6 @@ readers.head = function(f,fontdata)
+@@ -1063,8 +1066,8 @@ readers.head = function(f,fontdata)
              magic             = readulong(f),
              flags             = readushort(f),
              units             = readushort(f),
 -            created           = readlongdatetime(f),
 -            modified          = readlongdatetime(f),
++            created           = skiplongdatetime(f), -- skipped: nil
++            modified          = skiplongdatetime(f), -- skipped: nil
              xmin              = readshort(f),
              ymin              = readshort(f),
              xmax              = readshort(f),
-@@ -2056,11 +2049,9 @@ local function loadtables(f,specification,offset)
+@@ -2056,11 +2059,9 @@ local function loadtables(f,specification,offset)
      local tables   = { }
      local basename = file.basename(specification.filename)
      local filesize = specification.filesize
@@ -248,7 +257,7 @@ index c2b6898..3aad882 100644
          version       = readstring(f,4),
          noftables     = readushort(f),
          searchrange   = readushort(f), -- not needed
-@@ -2292,7 +2283,6 @@ local function loadfontdata(specification)
+@@ -2292,7 +2293,6 @@ local function loadfontdata(specification)
      local filename = specification.filename
      local fileattr = lfs.attributes(filename)
      local filesize = fileattr and fileattr.size or 0
@@ -256,7 +265,7 @@ index c2b6898..3aad882 100644
      local f = openfile(filename,true) -- zero based
      if not f then
          report("unable to open %a",filename)
-@@ -2301,7 +2291,6 @@ local function loadfontdata(specification)
+@@ -2301,7 +2301,6 @@ local function loadfontdata(specification)
          closefile(f)
      else
          specification.filesize = filesize
@@ -264,7 +273,7 @@ index c2b6898..3aad882 100644
          local version  = readstring(f,4)
          local fontdata = nil
          if version == "OTTO" or version == "true" or version == "\0\1\0\0" then
-@@ -2337,7 +2326,6 @@ local function loadfontdata(specification)
+@@ -2337,7 +2336,6 @@ local function loadfontdata(specification)
                      fontdata = {
                          filename    = filename,
                          filesize    = filesize,
@@ -272,7 +281,7 @@ index c2b6898..3aad882 100644
                          version     = version,
                          subfonts    = subfonts,
                          ttcversion  = ttcversion,
-@@ -2472,7 +2460,6 @@ function readers.loadfont(filename,n,instance)
+@@ -2472,7 +2470,6 @@ function readers.loadfont(filename,n,instance)
              tableversion  = tableversion,
              creator       = "context mkiv",
              size          = fontdata.filesize,

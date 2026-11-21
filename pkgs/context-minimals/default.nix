@@ -127,10 +127,12 @@ stdenv.mkDerivation (attrsFinal: {
     mkdir -p $out/share/tex
     ln -t $out/share/tex -s $src/share/tex/*
 
-    # Wrap binaries in texmf-system to /bin
+    # Wrap binaries in texmf-system to /bin. ConTeXt needs a writable cache
+    # (formats, file and font databases); an empty TEXMFCACHE makes format
+    # generation fail, so default to a per-user cache unless one is set.
     for BIN in context mtxrun luametatex luatex; do
       makeWrapper $out/share/tex/texmf-context/bin/$BIN $out/bin/$BIN \
-        --set TEXMFCACHE $TEXMFCACHE
+        --run 'export TEXMFCACHE="''${TEXMFCACHE:-''${XDG_CACHE_HOME:-$HOME/.cache}/context-minimals}"'
     done
 
     # Set up texmf-cache
